@@ -1,57 +1,58 @@
-# Analisador de Currículos com RAG
+# Resume Analizer with RAG
 
-Este projeto implementa um analisador de currículos usando Streamlit, processamento de linguagem natural e Retrieval-Augmented Generation (RAG). A aplicação permite aos usuários fazer upload de currículos em PDF, processá-los e fazer perguntas sobre as qualificações dos candidatos.
+This project implements a resume analyzer using Streamlit, natural language processing, and Retrieval-Augmented Generation (RAG). The application allows users to upload resumes in PDF format, process them, and ask questions about the candidates' qualifications.
 
-## Componentes Principais
+## Main Components
 
-1. **Streamlit**: Framework para criar a interface web da aplicação.
-2. **PyPDF**: Biblioteca para extrair texto de arquivos PDF.
-3. **LangChain**: Conjunto de ferramentas para processamento de linguagem natural e RAG.
-4. **FAISS**: Biblioteca para busca eficiente de vetores similares.
-5. **Hugging Face**: Plataforma para acessar modelos de linguagem pré-treinados.
+1. **Streamlit**: Framework for creating the web interface of the application.
+2. **PyPDF**: Library for extracting text from PDF files.
+3. **LangChain**: Set of tools for natural language processing and RAG.
+4. **FAISS**: Library for efficient search of similar vectors.
+5. **Hugging Face**: Platform for accessing pre-trained language models.
 
-## Fluxo de Funcionamento
+## Workflow
 
-1. **Upload do Currículo**: O usuário faz upload de um arquivo PDF contendo o currículo.
+1. **Resume Upload**: The user uploads a PDF file containing the resume.
 
-2. **Extração de Texto**: O texto é extraído do PDF usando a biblioteca PyPDF.
+2. **Text Extraction**: The text is extracted from the PDF using the PyPDF library.
 
-3. **Processamento do Texto**:
-   - O texto é dividido em chunks menores usando `RecursiveCharacterTextSplitter`.
-   - Cada chunk é convertido em um embedding usando `HuggingFaceEmbeddings`.
-   - Os embeddings são armazenados em um índice FAISS para busca eficiente.
+3. **Text Processing**:
+	- The text is split into smaller chunks using `RecursiveCharacterTextSplitter`.
+	- Each chunk is converted into an embedding using `HuggingFaceEmbeddings`.
+	- The embeddings are stored in a FAISS index for efficient search.
 
-4. **Configuração do Modelo de Linguagem**: É utilizado o modelo "google/flan-t5-large" da Hugging Face para gerar respostas.
+4. **Language Model Configuration**: The "google/flan-t5-large" model from Hugging Face is used to generate responses.
 
-5. **Interface de Perguntas e Respostas**:
-   - O usuário digita uma pergunta sobre o currículo.
-   - A pergunta é processada pelo sistema RAG:
-     a. Busca os chunks mais relevantes no índice FAISS.
-     b. Usa o modelo de linguagem para gerar uma resposta com base nos chunks recuperados e na pergunta.
-   - A resposta é exibida ao usuário, junto com os trechos do currículo usados como fonte.
+5. **Question and Answer Interface**:
+	- The user types a question about the resume.
+	- The question is processed by the RAG system:
+	  a. Searches for the most relevant chunks in the FAISS index.
+	  b. Uses the language model to generate a response based on the retrieved chunks and the question.
+	- The response is displayed to the user, along with the resume excerpts used as sources.
 
-## Tecnologias Utilizadas
+## Technologies Used
 
-- **Python**: Linguagem de programação principal.
-- **Streamlit**: Para criar a interface web interativa.
-- **LangChain**: Para implementar o pipeline de RAG.
-- **FAISS**: Para armazenamento e busca eficiente de embeddings.
-- **Hugging Face**: Para acessar modelos de linguagem pré-treinados.
-- **PyPDF**: Para extrair texto de arquivos PDF.
+- **Python**: Main programming language.
+- **Streamlit**: To create the interactive web interface.
+- **LangChain**: To implement the RAG pipeline.
+- **FAISS**: For efficient storage and search of embeddings.
+- **Hugging Face**: To access pre-trained language models.
+- **PyPDF**: To extract text from PDF files.
 
-## Vantagens da Abordagem RAG
+## Advantages of the RAG Approach
 
-1. **Respostas Contextualizadas**: As respostas são geradas com base no conteúdo específico do currículo.
-2. **Flexibilidade**: Pode responder a uma ampla variedade de perguntas sem necessidade de treinamento específico.
-3. **Transparência**: Mostra as fontes das informações usadas para gerar as respostas.
-4. **Eficiência**: Usa busca vetorial para rapidamente encontrar informações relevantes em currículos longos.
+1. **Contextualized Responses**: Responses are generated based on the specific content of the resume.
+2. **Flexibility**: Can answer a wide variety of questions without specific training.
+3. **Transparency**: Shows the sources of the information used to generate the responses.
+4. **Efficiency**: Uses vector search to quickly find relevant information in long resumes.
 
-## Possíveis Melhorias
+## Possible Improvements
 
-1. **Suporte a Múltiplos Currículos**: Permitir o upload e análise de vários currículos simultaneamente.
-2. **Análise Comparativa**: Implementar funcionalidades para comparar diferentes candidatos.
-3. **Extração de Informações Estruturadas**: Adicionar capacidade de extrair e organizar informações específicas (ex: habilidades, experiência) de forma estruturada.
-4. **Interface de Usuário Aprimorada**: Adicionar visualizações e filtros mais avançados para melhorar a experiência do usuário.
-5. **Modelos de Linguagem Mais Avançados**: Experimentar com modelos mais recentes e potentes para melhorar a qualidade das respostas.
+1. **Support for Multiple Resumes**: Allow the upload and analysis of multiple resumes simultaneously.
+2. **Comparative Analysis**: Implement features to compare different candidates.
+3. **Structured Information Extraction**: Add the capability to extract and organize specific information (e.g., skills, experience) in a structured manner.
+4. **Enhanced User Interface**: Add more advanced visualizations and filters to improve the user experience.
+5. **More Advanced Language Models**: Experiment with newer and more powerful models to improve the quality of responses.
 
-Este projeto demonstra uma aplicação prática de técnicas avançadas de NLP e IA para resolver um problema real de análise de currículos, oferecendo uma ferramenta poderosa para profissionais de RH e recrutadores.
+This project demonstrates a practical application of advanced NLP and AI techniques to solve a real problem of resume analysis, offering a powerful tool for HR professionals and recruiters.
+
