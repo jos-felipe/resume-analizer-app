@@ -18,10 +18,21 @@ client = Groq(api_key=GROQ_API_KEY)
 # Initialize ChromaDB
 chroma_client = chromadb.Client()
 embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction()
-collection = chroma_client.create_collection(
-    name="resumes",
-    embedding_function=embedding_function
-)
+
+# Try to get existing collection or create a new one
+def get_or_create_collection():
+    try:
+        return chroma_client.get_collection(
+            name="resumes",
+            embedding_function=embedding_function
+        )
+    except ValueError:  # Collection doesn't exist
+        return chroma_client.create_collection(
+            name="resumes",
+            embedding_function=embedding_function
+        )
+
+collection = get_or_create_collection()
 
 def extract_text_from_pdf(pdf_file):
     pdf_reader = PyPDF2.PdfReader(pdf_file)
@@ -31,6 +42,9 @@ def extract_text_from_pdf(pdf_file):
     return text
 
 def process_resumes(zip_file):
+    # Clear existing data
+    collection.delete(where={})
+    
     with tempfile.TemporaryDirectory() as temp_dir:
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
@@ -85,6 +99,11 @@ def main():
     if st.button("Generate Answer") and question:
         with st.spinner("Generating answer..."):
             search_results = semantic_search(question)
+            
+            if not search_results['documents'][0]:
+                st.warning("No resumes found. Please upload some resumes first.")
+                return
+                
             context = "\n\n".join(search_results['documents'][0])
             answer = generate_answer(question, context)
             
