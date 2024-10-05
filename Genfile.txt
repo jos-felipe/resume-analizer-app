@@ -9,7 +9,7 @@ Create a web application using Streamlit that integrates resume processing, sema
 <stack>
 - Python
 - ChromaDB
-- Groq
+- Groq python module
 - llama3-8b-8192 model
 - Streamlit
 </stack>
@@ -20,9 +20,10 @@ Create a web application using Streamlit that integrates resume processing, sema
 3. Develop the semantic search function using ChromaDB.
 4. Create a function to generate answers with LLM via Groq, using the retrieved context.
 5. Build the Streamlit interface with the following components:
-• Option to upload multiple resumes in a zip file.
+• Option to upload a zip file with multiple resumes.
 • Input field for questions about the candidates.
 • Area to display the generated answers.
+6. Load Groq API key from .env.
 </instructions>
 
 <hint>
