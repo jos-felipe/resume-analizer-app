@@ -1,6 +1,7 @@
 /*
 
 !.gitignore
+!Genfile.txt
 !README.md
 !requirements.txt
 !resume_analyzer_app.py

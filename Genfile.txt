@@ -1,0 +1,35 @@
+<role>
+You are a software engineer at a recruitment company. Your team is developing a tool to streamline the hiring process by automating the analysis of candidates' resumes. The tool should be able to process resumes in PDF format, perform semantic searches, and answer questions about the candidates' qualifications using a language model.
+</role>
+
+<task>
+Create a web application using Streamlit that integrates resume processing, semantic search, and a language model to analyze and answer questions about candidates' qualifications using Retrieval-Augmented Generation (RAG).
+</task>
+
+<stack>
+- Python
+- ChromaDB
+- Groq
+- llama3-8b-8192 model
+- Streamlit
+</stack>
+
+<instructions>
+1. Configure ChromaDB for storage and retrieval of embeddings.
+2 Prepare the integration with Groq to use the llama3-8b-8192 model.
+3. Develop the semantic search function using ChromaDB.
+4. Create a function to generate answers with LLM via Groq, using the retrieved context.
+5. Build the Streamlit interface with the following components:
+• Option to upload multiple resumes in a zip file.
+• Input field for questions about the candidates.
+• Area to display the generated answers.
+</instructions>
+
+<hint>
+Use st.spinner() for long operations.
+</hint>
+
+<example>
+Question: List the candidates with experience in data analysis.
+Answer: <candidate>
+</example>
