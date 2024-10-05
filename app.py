@@ -7,34 +7,43 @@ import PyPDF2
 from groq import Groq
 from dotenv import load_dotenv
 from chromadb.utils import embedding_functions
+from chromadb.config import Settings
 
 # Load environment variables
 load_dotenv()
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
+# Define persistent directory
+PERSIST_DIRECTORY = os.path.join(os.getcwd(), 'chroma_db')
+
 # Initialize Groq client
 client = Groq(api_key=GROQ_API_KEY)
 
-# Initialize ChromaDB
+# Initialize ChromaDB with persistence
 @st.cache_resource
 def init_chroma():
-    chroma_client = chromadb.Client()
+    chroma_client = chromadb.PersistentClient(
+        path=PERSIST_DIRECTORY,
+        settings=Settings(
+            anonymized_telemetry=False,
+            is_persistent=True
+        )
+    )
+    
     embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction()
     
-    # Get all collection names
-    collection_names = [col.name for col in chroma_client.list_collections()]
-    
-    # If 'resumes' collection exists, get it; otherwise, create it
-    if "resumes" in collection_names:
+    try:
         collection = chroma_client.get_collection(
             name="resumes",
             embedding_function=embedding_function
         )
-    else:
+        st.sidebar.info(f"Using existing collection. Current documents: {collection.count()}")
+    except ValueError:
         collection = chroma_client.create_collection(
             name="resumes",
             embedding_function=embedding_function
         )
+        st.sidebar.info("Created new collection")
     
     return collection
 
@@ -80,6 +89,7 @@ def process_resumes(zip_file):
                     metadatas=metadatas,
                     ids=ids
                 )
+                st.sidebar.info(f"Processed {len(documents)} resumes. Total documents: {collection.count()}")
                 return True
             else:
                 st.warning("No PDF files found in the uploaded ZIP.")
@@ -121,6 +131,13 @@ Answer:"""
 def main():
     st.title("Resume Analyzer")
     
+    # Sidebar
+    st.sidebar.title("Status")
+    if st.sidebar.button("Clear All Resumes"):
+        collection.delete(where={})
+        st.sidebar.success("All resumes cleared!")
+        st.experimental_rerun()
+    
     # File uploader for ZIP file containing resumes
     uploaded_file = st.file_uploader("Upload ZIP file containing resumes (PDF format)", type="zip")
     
@@ -134,11 +151,15 @@ def main():
     question = st.text_input("Ask a question about the candidates:")
     
     if st.button("Generate Answer") and question:
+        if collection.count() == 0:
+            st.warning("No resumes in the database. Please upload some resumes first.")
+            return
+        
         with st.spinner("Generating answer..."):
             search_results = semantic_search(question)
             
             if not search_results or not search_results['documents'][0]:
-                st.warning("No relevant information found. Please ensure resumes are uploaded and try a different question.")
+                st.warning("No relevant information found. Please try a different question.")
                 return
                 
             context = "\n\n".join(search_results['documents'][0])
